@@ -1,0 +1,25 @@
+{
+    "name": "oxid-academy/oxcoin",
+    "description": "Sample payment extension",
+    "type": "oxideshop-module",
+    "keywords": ["oxid", "modules", "eShop"],
+    "homepage": "https://www.oxid-esales.com/oxid-welt/academy/schulungen/",
+    "license": [
+        "GPL-3.0-only",
+        "proprietary"
+    ],
+    "extra": {
+        "oxideshop": {
+            "target-directory": "oxac/oxcoin"
+        }
+    },
+    "version":  "1.0.0",
+    "require": {
+        "php": ">=7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "OxidAcademy\\OxCoin\\": "../../../source/modules/oxac/oxcoin"
+        }
+    }
+}
