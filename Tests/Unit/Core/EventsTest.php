@@ -62,7 +62,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
 
         // Generally deleting the payment
         DatabaseProvider::getDb()->execute(
-            "DELETE FROM `oxpayments` WHERE OXID = ?",
+            "DELETE FROM `oxpayments` WHERE `OXID` = ?",
             ['oxcoin']
         );
 
@@ -72,7 +72,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
         // Payment should not exist
         $result = (bool) DatabaseProvider::getDb()->getOne(
             $query,
-            [1]
+            ['oxcoin']
         );
         $this->assertFalse($result);
 
@@ -82,7 +82,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
         // Payment should exist
         $result = (bool) DatabaseProvider::getDb()->getOne(
             $query,
-            [1]
+            ['oxcoin']
         );
 
         // Testing the outcome of the method Events::addPaymentMethod
@@ -169,7 +169,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
     public function testAssignPaymentMethodToDefaultShippingMethodAddNothingIfAlreadyExisting()
     {
         $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $db->execute('delete from oxobject2payment');
+        $db->execute('DELETE FROM `oxobject2payment`;');
 
         $object2Payment = oxNew(BaseModel::class);
         $object2Payment->init('oxobject2payment');
