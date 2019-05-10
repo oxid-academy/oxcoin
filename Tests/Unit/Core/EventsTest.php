@@ -40,8 +40,14 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
     public function tearDown()
     {
         // Generally deleting the payment
-        DatabaseProvider::getDb()->execute('delete from oxpayments where oxid = "oxcoin"');
-        DatabaseProvider::getDb()->execute('delete from oxobject2payment where oxpaymentid = "oxcoin"');
+        DatabaseProvider::getDb()->execute(
+            "DELETE FROM `oxpayments` WHERE `OXID` = ?",
+            ['oxcoin']
+        );
+        DatabaseProvider::getDb()->execute(
+            "DELETE FROM `oxobject2payment` WHERE `OXPAYMENTID` = ?",
+            ['oxcoin']
+        );
 
         parent::tearDown();
     }
@@ -244,7 +250,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
 
         Events::onDeactivate();
 
-        $query = "SELECT `OXID`, `OXACTIVE` FROM `OXPAYMENTS` WHERE `OXID` = ? LIMIT 1";
+        $query = "SELECT `OXID`, `OXACTIVE` FROM `oxpayments` WHERE `OXID` = ? LIMIT 1";
         $result = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
             $query,
             ['oxcoin']
