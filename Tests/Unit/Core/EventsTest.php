@@ -169,7 +169,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
     public function testAssignPaymentMethodToDefaultShippingMethodAddNothingIfAlreadyExisting()
     {
         $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $db->execute('DELETE FROM `oxobject2payment`;');
+        $db->execute('delete from oxobject2payment');
 
         $object2Payment = oxNew(BaseModel::class);
         $object2Payment->init('oxobject2payment');
@@ -221,7 +221,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
     {
         Events::onActivate();
 
-        $query = "SELECT `OXID`, `OXACTIVE` FROM `oxpayments` WHERE `OXID` = ? LIMIT 1";
+        $query = "SELECT `oxid`, `oxactive` FROM `oxpayments` WHERE `OXID` = ? LIMIT 1";
         $result = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
             $query,
             ['oxcoin']
@@ -250,7 +250,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
 
         Events::onDeactivate();
 
-        $query = "SELECT `OXID`, `OXACTIVE` FROM `oxpayments` WHERE `OXID` = ? LIMIT 1";
+        $query = "SELECT `oxid`, `oxactive` FROM `oxpayments` WHERE `oxid` = ? LIMIT 1";
         $result = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
             $query,
             ['oxcoin']
