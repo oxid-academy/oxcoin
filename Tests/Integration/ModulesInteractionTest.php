@@ -45,7 +45,7 @@ class ModulesInteractionTest extends \OxidEsales\TestingLibrary\UnitTestCase
             if (
                 !$module->isActive() &&
                 (
-                    $module->getId() != 'oxacfeefreepayments' ||
+                    $module->getId() != 'oxac/feefreepayments' ||
                     $activateFeeFreePayment
                 )
             ) {
