@@ -41,11 +41,11 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
     {
         // Generally deleting the payment
         DatabaseProvider::getDb()->execute(
-            "DELETE FROM `oxpayments` WHERE `OXID` = ?",
+            "DELETE FROM oxpayments WHERE oxid = ?",
             ['oxcoin']
         );
         DatabaseProvider::getDb()->execute(
-            "DELETE FROM `oxobject2payment` WHERE `OXPAYMENTID` = ?",
+            "DELETE FROM oxobject2payment WHERE oxpaymentid = ?",
             ['oxcoin']
         );
 
@@ -62,12 +62,12 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
 
         // Generally deleting the payment
         DatabaseProvider::getDb()->execute(
-            "DELETE FROM `oxpayments` WHERE `OXID` = ?",
+            "DELETE FROM oxpayments WHERE oxid = ?",
             ['oxcoin']
         );
 
         // Control query
-        $query = 'SELECT 1 FROM `oxpayments` WHERE `OXID` = ? LIMIT 1';
+        $query = 'SELECT 1 FROM oxpayments WHERE oxid = ? LIMIT 1';
 
         // Payment should not exist
         $result = (bool) DatabaseProvider::getDb()->getOne(
@@ -139,7 +139,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
     {
         $db = DatabaseProvider::getDb();
         $db->execute(
-            "DELETE FROM `oxobject2payment` WHERE `OXPAYMENTID` = ? AND `OXOBJECTID` = ?",
+            "DELETE FROM oxobject2payment WHERE oxpaymentid = ? AND oxobjectid = ?",
             [
                 'oxcoin',
                 'oxidstandard'
@@ -148,7 +148,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
 
         Events::assignPaymentMethodToDefaultShippingMethod();
 
-        $query = 'SELECT 1 FROM `oxobject2payment` WHERE `OXPAYMENTID` = ? AND `OXOBJECTID` = ?';
+        $query = 'SELECT 1 FROM oxobject2payment WHERE oxpaymentid = ? AND oxobjectid = ?';
         $this->assertTrue((bool) $db->getOne(
             $query,
             [
@@ -221,7 +221,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
     {
         Events::onActivate();
 
-        $query = "SELECT `oxid`, `oxactive` FROM `oxpayments` WHERE `OXID` = ? LIMIT 1";
+        $query = "SELECT oxid, oxactive FROM oxpayments WHERE oxid = ? LIMIT 1";
         $result = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
             $query,
             ['oxcoin']
@@ -231,7 +231,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals('1', $result->fields['oxactive']); // ... and was activated.
 
         // ... and was assigned to a shipping method
-        $query = "SELECT 1 FROM `oxobject2payment` WHERE `OXPAYMENTID` = ? LIMIT 1";
+        $query = "SELECT 1 FROM oxobject2payment WHERE oxpaymentid = ? LIMIT 1";
         $this->assertTrue((bool) DatabaseProvider::getDb()->getOne(
             $query,
             ['oxcoin']
@@ -250,7 +250,7 @@ class EventsTest extends \OxidEsales\TestingLibrary\UnitTestCase
 
         Events::onDeactivate();
 
-        $query = "SELECT `oxid`, `oxactive` FROM `oxpayments` WHERE `oxid` = ? LIMIT 1";
+        $query = "SELECT oxid, oxactive FROM oxpayments WHERE oxid = ? LIMIT 1";
         $result = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
             $query,
             ['oxcoin']
