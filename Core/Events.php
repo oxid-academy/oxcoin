@@ -93,7 +93,7 @@ class Events
     {
         $db = DatabaseProvider::getDb();
         $oxid = $db->getOne(
-            "SELECT `OXID` FROM `oxobject2payment` WHERE `OXPAYMENTID` = ? AND `OXOBJECTID` = ?",
+            'SELECT oxid FROM oxobject2payment WHERE oxpaymentid = ? AND oxobjectid = ?',
             [
                 'oxcoin',
                 'oxidstandard'
@@ -105,7 +105,7 @@ class Events
             $object2Payment->init('oxobject2payment');
             $object2Payment->oxobject2payment__oxpaymentid = new Field('oxcoin');
             $object2Payment->oxobject2payment__oxobjectid = new Field('oxidstandard');
-            $object2Payment->oxobject2payment__oxtype = new Field("oxdelset");
+            $object2Payment->oxobject2payment__oxtype = new Field('oxdelset');
             $object2Payment->save();
         }
     }

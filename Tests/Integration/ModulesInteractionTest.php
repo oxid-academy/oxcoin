@@ -18,12 +18,20 @@
 
 namespace OxidAcademy\OxCoin\Tests\Integration;
 
+use OxidEsales\Eshop\Application\Controller\PaymentController;
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Delivery;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Module\ModuleList;
+use OxidEsales\Eshop\Core\Price;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\TestingLibrary\UnitTestCase;
 
-class ModulesInteractionTest extends \OxidEsales\TestingLibrary\UnitTestCase
+class ModulesInteractionTest extends UnitTestCase
 {
     /**
      * The example module oxacFeeFreePayment will kick out this example module oxCoin from the payment list as oxCoin
@@ -62,7 +70,7 @@ class ModulesInteractionTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $_POST['sShipSet'] = 'oxidstandard';
 
         // <Creating Shipping Cost Rules>
-        $delivery = oxNew(\OxidEsales\Eshop\Application\Model\Delivery::class);
+        $delivery = oxNew(Delivery::class);
         $delivery->setId('_delivery_test_id');
         $delivery->oxdelivery__oxactive = new Field(1);
         $delivery->oxdelivery__oxparamend = new Field(999);
@@ -86,30 +94,30 @@ class ModulesInteractionTest extends \OxidEsales\TestingLibrary\UnitTestCase
 
 
         // <Creating a basket>
-        $price = oxNew(\OxidEsales\Eshop\Core\Price::class);
+        $price = oxNew(Price::class);
         $price->setPrice(1.0);
 
-        $article = oxNew(\OxidEsales\Eshop\Application\Model\Article::class);
+        $article = oxNew(Article::class);
         $article->setId('test_665');
         $article->setPrice($price);
         $article->save();
 
-        $basket = oxNew(\OxidEsales\Eshop\Application\Model\Basket::class);
+        $basket = oxNew(Basket::class);
         $basket->addToBasket($article->getId(), 1.0);
 
-        \OxidEsales\Eshop\Core\Registry::getSession()->setBasket($basket);
+        Registry::getSession()->setBasket($basket);
         // </Creating a basket>
 
 
         // Creating a user
-        $user = oxNew(\OxidEsales\Eshop\Application\Model\User::class);
+        $user = oxNew(User::class);
         $user->setId('_user_test_id');
         $user->oxusers__oxusername = new Field('_user_test_username');
         $user->save();
 
 
         // Creating a PaymentController object and inject the user object.
-        $controller = oxNew(\OxidEsales\Eshop\Application\Controller\PaymentController::class);
+        $controller = oxNew(PaymentController::class);
         $controller->setUser($user);
 
 
