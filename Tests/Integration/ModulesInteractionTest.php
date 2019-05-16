@@ -25,48 +25,14 @@ use OxidEsales\Eshop\Application\Model\Delivery;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\Eshop\Core\Module\Module;
-use OxidEsales\Eshop\Core\Module\ModuleList;
 use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\TestingLibrary\UnitTestCase;
 
 class ModulesInteractionTest extends UnitTestCase
 {
-    /**
-     * The example module oxacFeeFreePayment will kick out this example module oxCoin from the payment list as oxCoin
-     * has a fee.
-     * To simulate the integration tests we can switch if the FeeFreePayment module should be active or not. If it is
-     * active, the Integration test will fail (correctly).
-     *
-     * @throws \Exception
-     */
-    protected function helperActivateAllModules($activateFeeFreePayment = false)
-    {
-        $moduleDirectory = $this->getConfig()->getModulesDir();
-        $moduleList = oxNew(ModuleList::class);
-        $listOfAllModules = $moduleList->getModulesFromDir($moduleDirectory);
-
-        foreach ($listOfAllModules as $module) {
-
-            /** @var Module $module */
-            if (
-                !$module->isActive() &&
-                (
-                    $module->getId() != 'oxac/feefreepayments' ||
-                    $activateFeeFreePayment
-                )
-            ) {
-                parent::_getModuleLoader()->installModule($module->getModulePath());
-            }
-        }
-    }
-
     public function testPaymentListProvidedByThePaymentController()
     {
-        $this->helperActivateAllModules();
-
-
         $_POST['sShipSet'] = 'oxidstandard';
 
         // <Creating Shipping Cost Rules>
