@@ -100,7 +100,7 @@ class Events
             ]
         );
 
-        if ($oxid == null) {
+        if ($oxid === null) {
             $object2Payment = oxNew(BaseModel::class);
             $object2Payment->init('oxobject2payment');
             $object2Payment->oxobject2payment__oxpaymentid = new Field('oxcoin');
