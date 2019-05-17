@@ -28,7 +28,7 @@ $aModule = [
         'en' => 'Module for the payment with the crypto currency OXID Coin.',
     ],
     'thumbnail'    => 'logo.png',
-    'version'      => '1.0.2',
+    'version'      => '1.0.3',
     'author'       => 'OXID Academy',
     'url'          => 'https://www.oxid-esales.com/oxid-welt/academy/schulungen/',
     'email'        => 'academy@oxid-esales.com',
