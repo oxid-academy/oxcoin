@@ -20,8 +20,10 @@ namespace OxidAcademy\OxCoin\Core;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\DbMetaDataHandler;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class Events
@@ -42,6 +44,8 @@ class Events
 
         // Adding the payment to a shipping method
         self::assignPaymentMethodToDefaultShippingMethod();
+
+        self::addTableFieldToUserTable();
     }
 
     /**
@@ -111,6 +115,25 @@ class Events
     }
 
     /**
+     * Adds the field oxac_oxcoin to the table oxuser.
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     */
+    public static function addTableFieldToUserTable()
+    {
+        $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
+
+        if (!$dbMetaDataHandler->fieldExists('oxac_oxcoin', 'oxuser')) {
+            DatabaseProvider::getDb()->execute(
+                'ALTER TABLE oxuser ADD OXAC_OXCOIN float(23,14) zerofill NOT NULL;'
+            );
+
+            self::clearTmp();
+        }
+    }
+
+    /**
      * Disables payment method
      */
     public static function deactivatePaymentMethod()
@@ -119,5 +142,79 @@ class Events
         $payment->load('oxcoin');
         $payment->oxpayments__oxactive = new Field(0);
         $payment->save();
+    }
+
+    /**
+     * Borrowed from the module oegdproptin
+     * @author oegdproptin
+     * @link https://github.com/OXID-eSales/gdpr-optin-module
+     *
+     * Clean temp folder content.
+     *
+     * @param string $clearFolderPath Sub-folder path to delete from. Should be a full, valid path inside temp folder.
+     *
+     * @return boolean
+     */
+    protected static function clearTmp($clearFolderPath = '')
+    {
+        $folderPath = self::_getFolderToClear($clearFolderPath);
+        $directoryHandler = opendir($folderPath);
+
+        if (!empty($directoryHandler)) {
+            while (false !== ($fileName = readdir($directoryHandler))) {
+                $filePath = $folderPath . DIRECTORY_SEPARATOR . $fileName;
+                self::_clear($fileName, $filePath);
+            }
+
+            closedir($directoryHandler);
+        }
+
+        return true;
+    }
+
+    /**
+     * Borrowed from the module oegdproptin
+     * @author oegdproptin
+     * @link https://github.com/OXID-eSales/gdpr-optin-module
+     *
+     * Check if provided path is inside eShop `tpm/` folder or use the `tmp/` folder path.
+     *
+     * @param string $clearFolderPath
+     *
+     * @return string
+     */
+    protected static function _getFolderToClear($clearFolderPath = '')
+    {
+        $templateFolderPath = Registry::getConfig()->getConfigParam('sCompileDir');
+
+        if (!empty($clearFolderPath) and (strpos($clearFolderPath, $templateFolderPath) !== false)) {
+            $folderPath = $clearFolderPath;
+        } else {
+            $folderPath = $templateFolderPath;
+        }
+
+        return $folderPath;
+    }
+
+    /**
+     * Borrowed from the module oegdproptin
+     * @author oegdproptin
+     * @link https://github.com/OXID-eSales/gdpr-optin-module
+     *
+     * Check if resource could be deleted, then delete it's a file or
+     * call recursive folder deletion if it's a directory.
+     *
+     * @param string $fileName
+     * @param string $filePath
+     */
+    protected static function _clear($fileName, $filePath)
+    {
+        if (!in_array($fileName, ['.', '..', '.gitkeep', '.htaccess'])) {
+            if (is_file($filePath)) {
+                @unlink($filePath);
+            } else {
+                self::clearTmp($filePath);
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ $aModule = [
     'id'           => 'oxac/coin',
     'title'        => 'OXID Coin',
     'description'  => [
-        'de' => 'Modul für die Zahlung mit der Kryptowährung OXID Coin.',
+        'de' => 'Modul f&uuml;r die Zahlung mit der Kryptow&auml;hrung OXID Coin.',
         'en' => 'Module for the payment with the crypto currency OXID Coin.',
     ],
     'thumbnail'    => 'logo.png',
@@ -35,5 +35,8 @@ $aModule = [
     'events'       => [
         'onActivate' => '\OxidAcademy\OxCoin\Core\Events::onActivate',
         'onDeactivate' => '\OxidAcademy\OxCoin\Core\Events::onDeactivate'
+    ],
+    'extend' => [
+        \OxidEsales\Eshop\Application\Model\Order::class => \OxidAcademy\OxCoin\Application\Model\Order::class
     ],
 ];

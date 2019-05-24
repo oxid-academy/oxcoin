@@ -20,7 +20,9 @@ namespace OxidAcademy\OxCoin\Tests\Unit\Core;
 
 use OxidAcademy\OxCoin\Core\Events;
 use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\DbMetaDataHandler;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\TestingLibrary\UnitTestCase;
@@ -259,5 +261,60 @@ class EventsTest extends UnitTestCase
 
         $this->assertEquals('oxcoin', $result->fields['oxid']); // It exists...
         $this->assertEquals('0', $result->fields['oxactive']); // ... and was deactivated.
+    }
+
+    /**
+     * Testing the method onActivate adds our field oxac_oxcoin to the table oxuser.
+     *
+     * @group addTableFieldToUserTable
+     */
+    public function testAddFieldToUserTableWhenItIsNotExisting()
+    {
+        $db = DatabaseProvider::getDb();
+        $databaseMetaDataHandler = oxNew(DbMetaDataHandler::class);
+
+        $table = 'oxuser';
+        $field = 'oxac_oxcoin';
+
+        $db->execute('ALTER TABLE '.$table.' DROP COLUMN '.$field.';');
+
+        $this->assertFalse($databaseMetaDataHandler->fieldExists($field, $table));
+
+        Events::addTableFieldToUserTable();
+
+        $this->assertTrue($databaseMetaDataHandler->fieldExists($field, $table));
+    }
+
+    /**
+     * Testing the method onActivate. Check if the field oxac_oxcoin is only added to the table oxuser, when it is not
+     * existing yet. If it would be overwritten, then the saved value 665.0 would be 0.0 again.
+     *
+     * @group addTableFieldToUserTable
+     */
+    public function testDoNotAddTheFieldOxAcOxcoinToTheUserTableWhenItIsAlreadyExisting()
+    {
+        $db = DatabaseProvider::getDb();
+        $databaseMetaDataHandler = oxNew(DbMetaDataHandler::class);
+
+        Events::addTableFieldToUserTable();
+
+        $this->assertTrue($databaseMetaDataHandler->fieldExists('oxac_oxcoin', 'oxuser'));
+
+        $user = oxNew(User::class);
+        $user->setId('_test_oxid');
+        $user->oxuser__oxusername = new Field('_test_user');
+        $user->oxuser__oxac_oxcoin = new Field(665.0);
+        $user->save();
+
+        $controlQuery = 'select oxac_oxcoin from oxuser where oxid = "_test_oxid"';
+
+        $amount = $db->getOne($controlQuery);
+        $this->assertEquals(665, $amount);
+
+        Events::addTableFieldToUserTable();
+
+        $user->load($user->getId());
+        $amount = $db->getOne($controlQuery);
+        $this->assertEquals(665, $amount);
     }
 }
