@@ -30,7 +30,12 @@ class OrderTest extends UnitTestCase
      */
     public function testFinalizeOrderEarnCoinWhenUserIsCustomer()
     {
-        $user = $this->getMock(User::class, ['isMallAdmin']);
+        $user = $this
+            ->getMockBuilder(User::class)
+            ->setMethods(['isMallAdmin'])
+            ->getMock()
+        ;
+
         $user->expects($this->once())->method('isMallAdmin')->will($this->returnValue(false));
 
         $basket = oxNew(Basket::class);
@@ -49,7 +54,12 @@ class OrderTest extends UnitTestCase
      */
     public function testFinalizeOrderDoNotEarnCoinWhenUserIsMallAdmin()
     {
-        $user = $this->getMock(User::class, ['isMallAdmin']);
+        $user = $this
+            ->getMockBuilder(User::class)
+            ->setMethods(['isMallAdmin'])
+            ->getMock()
+        ;
+
         $user->expects($this->once())->method('isMallAdmin')->will($this->returnValue(true));
 
         $basket = oxNew(Basket::class);
