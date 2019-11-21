@@ -9,7 +9,7 @@
  *
  * @author        OXID Academy
  * @link          https://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2019
+ * @copyright (C) OXID eSales AG 2003-2021
  *
  * User: michael
  * Date: 22.05.19
