@@ -22,13 +22,16 @@ $sMetadataVersion = '2.1';
  */
 $aModule = [
     'id'           => 'oxac/coin',
-    'title'        => 'OXID Coin',
+    'title'        => [
+	'de' => 'OXID Coin (Modulskelett)',
+	'en' => 'OXID Coin (module skeleton)'
+    ],
     'description'  => [
         'de' => 'Modul f&uuml;r die Zahlung mit der Kryptow&auml;hrung OXID Coin.',
         'en' => 'Module for the payment with the crypto currency OXID Coin.',
     ],
     'thumbnail'    => 'logo.png',
-    'version'      => '1.0.3',
+    'version'      => '1.0.4',
     'author'       => 'OXID Academy',
     'url'          => 'https://www.oxid-esales.com/oxid-welt/academy/schulungen/',
     'email'        => 'academy@oxid-esales.com',
@@ -37,6 +40,6 @@ $aModule = [
         'onDeactivate' => '\OxidAcademy\OxCoin\Core\Events::onDeactivate'
     ],
     'extend' => [
-        \OxidEsales\Eshop\Application\Model\Order::class => \OxidAcademy\OxCoin\Application\Model\Order::class
+        \OxidEsales\Eshop\Application\Model\Order::class => \OxidAcademy\OxCoin\Model\Order::class
     ],
 ];

@@ -16,7 +16,7 @@
  * Time: 08:19
  */
 
-namespace OxidAcademy\OxCoin\Application\Model;
+namespace OxidAcademy\OxCoin\Model;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Core\Field;
@@ -35,15 +35,6 @@ class Order extends Order_parent
      */
     public function finalizeOrder(Basket $basket, $user, $recalculatingOrder = false)
     {
-        $orderState = parent::finalizeOrder($basket, $user, $recalculatingOrder);
 
-        if (!$user->isMallAdmin()) {
-            $earnedCoins = $basket->getNettoSum() / 1000.0;
-            $coinsSum = (float) $user->oxuser__oxac_oxcoin->value + $earnedCoins;
-            $user->oxuser__oxac_oxcoin = new Field($coinsSum, Field::T_RAW);
-            $user->save();
-        }
-
-        return $orderState;
     }
 }
