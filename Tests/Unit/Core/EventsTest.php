@@ -18,15 +18,6 @@
 
 namespace OxidAcademy\OxCoin\Tests\Unit\Core;
 
-use OxidAcademy\OxCoin\Core\Events;
-use OxidEsales\Eshop\Application\Model\Payment;
-use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\DatabaseProvider;
-use OxidEsales\Eshop\Core\DbMetaDataHandler;
-use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\TestingLibrary\UnitTestCase;
-
 class EventsTest extends UnitTestCase
 {
     /**
@@ -42,16 +33,10 @@ class EventsTest extends UnitTestCase
      */
     public function tearDown()
     {
-        // Generally deleting the payment
-        DatabaseProvider::getDb()->execute(
-            'DELETE FROM oxpayments WHERE oxid = ?',
-            ['oxcoin']
-        );
-        DatabaseProvider::getDb()->execute(
-            'DELETE FROM oxobject2payment WHERE oxpaymentid = ?',
-            ['oxcoin']
-        );
+	// Your test code coes here...
 
+
+	// Parent call
         parent::tearDown();
     }
 
@@ -63,33 +48,6 @@ class EventsTest extends UnitTestCase
     public function testAddPaymentMethodIfItIsNotExistingYet()
     {
 
-        // Generally deleting the payment
-        DatabaseProvider::getDb()->execute(
-            'DELETE FROM oxpayments WHERE oxid = ?',
-            ['oxcoin']
-        );
-
-        // Control query
-        $query = 'SELECT 1 FROM oxpayments WHERE oxid = ? LIMIT 1';
-
-        // Payment should not exist
-        $result = (bool) DatabaseProvider::getDb()->getOne(
-            $query,
-            ['oxcoin']
-        );
-        $this->assertFalse($result);
-
-        // Test the method
-        Events::addPaymentMethod();
-
-        // Payment should exist
-        $result = (bool) DatabaseProvider::getDb()->getOne(
-            $query,
-            ['oxcoin']
-        );
-
-        // Testing the outcome of the method Events::addPaymentMethod
-        $this->assertTrue($result);
     }
 
     /**
@@ -101,16 +59,7 @@ class EventsTest extends UnitTestCase
      */
     public function testDoNotAddPaymentMethodAgainWhenItIsAlreadyExisting()
     {
-        $payment = oxNew(Payment::class);
-        $payment->setId('oxcoin');
-        $payment->oxpayments__oxdesc = new Field('foobar'); // The module would write the value 'oxCoin'.
-        $payment->save();
 
-        Events::addPaymentMethod();
-
-        // Reloading the object to get that latest values from the database.
-        $payment->load('oxcoin');
-        $this->assertEquals('foobar', $payment->oxpayments__oxdesc->value);
     }
 
     /**
@@ -121,18 +70,7 @@ class EventsTest extends UnitTestCase
      */
     public function testActivatePaymentMethod()
     {
-        $payment = oxNew(Payment::class);
-        $payment->setId('oxcoin');
-        $payment->oxpayments__oxactive = new Field(0);
-        $payment->save();
 
-        // Control test that the magic getter returns false as expected
-        $this->assertFalse((bool) $payment->oxpayments__oxactive->value);
-
-        Events::activatePaymentMethod();
-
-        $payment->load('oxcoin');
-        $this->assertTrue((bool) $payment->oxpayments__oxactive->value);
     }
 
     /**
@@ -140,25 +78,7 @@ class EventsTest extends UnitTestCase
      */
     public function testAssignPaymentMethodToDefaultShippingMethod()
     {
-        $db = DatabaseProvider::getDb();
-        $db->execute(
-            'DELETE FROM oxobject2payment WHERE oxpaymentid = ? AND oxobjectid = ?',
-            [
-                'oxcoin',
-                'oxidstandard'
-            ]
-        );
 
-        Events::assignPaymentMethodToDefaultShippingMethod();
-
-        $query = 'SELECT 1 FROM oxobject2payment WHERE oxpaymentid = ? AND oxobjectid = ?';
-        $this->assertTrue((bool) $db->getOne(
-            $query,
-            [
-                'oxcoin',
-                'oxidstandard'
-            ]
-        ));
     }
 
     /**
@@ -171,24 +91,7 @@ class EventsTest extends UnitTestCase
      */
     public function testAssignPaymentMethodToDefaultShippingMethodAddNothingIfAlreadyExisting()
     {
-        $db = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
-        $db->execute('delete from oxobject2payment');
 
-        $object2Payment = oxNew(BaseModel::class);
-        $object2Payment->init('oxobject2payment');
-        $object2Payment->oxobject2payment__oxpaymentid = new Field('oxcoin');
-        $object2Payment->oxobject2payment__oxobjectid = new Field('oxidstandard');
-        $object2Payment->oxobject2payment__oxtype = new Field('foobar');
-        $object2Payment->save();
-        $oxid = $object2Payment->getId();
-
-        Events::assignPaymentMethodToDefaultShippingMethod();
-
-        $object2Payment = oxNew(BaseModel::class);
-        $object2Payment->init('oxobject2payment');
-        $object2Payment->load($oxid);
-
-        $this->assertEquals('foobar', $object2Payment->oxobject2payment__oxtype->value);
     }
 
     /**
@@ -198,21 +101,7 @@ class EventsTest extends UnitTestCase
      */
     public function testDeactivatePaymentMethod()
     {
-        $payment = oxNew(Payment::class);
-        $payment->setId('oxcoin');
-        $payment->oxpayments__oxactive = new Field(1);
-        $payment->save();
 
-        // Control test that the magic getter returns true as expected
-        $this->assertTrue((bool) $payment->oxpayments__oxactive->value);
-
-        Events::deactivatePaymentMethod();
-
-        // Reloading the object to get that latest values from the database.
-        $payment->load('oxcoin');
-
-        // Testing the method
-        $this->assertFalse((bool) $payment->oxpayments__oxactive->value);
     }
 
     /**
@@ -222,23 +111,7 @@ class EventsTest extends UnitTestCase
      */
     public function testOnActivate()
     {
-        Events::onActivate();
 
-        $query = 'SELECT oxid, oxactive FROM oxpayments WHERE oxid = ? LIMIT 1';
-        $result = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
-            $query,
-            ['oxcoin']
-        );
-
-        $this->assertEquals('oxcoin', $result->fields['oxid']); // It exists...
-        $this->assertEquals('1', $result->fields['oxactive']); // ... and was activated.
-
-        // ... and was assigned to a shipping method
-        $query = 'SELECT 1 FROM oxobject2payment WHERE oxpaymentid = ? LIMIT 1';
-        $this->assertTrue((bool) DatabaseProvider::getDb()->getOne(
-            $query,
-            ['oxcoin']
-        ));
     }
 
     /**
@@ -246,21 +119,7 @@ class EventsTest extends UnitTestCase
      */
     public function testOnDeactivate()
     {
-        $payment = oxNew(Payment::class);
-        $payment->setId('oxcoin');
-        $payment->oxpayments__oxactive = new Field(1);
-        $payment->save();
 
-        Events::onDeactivate();
-
-        $query = 'SELECT oxid, oxactive FROM oxpayments WHERE oxid = ? LIMIT 1';
-        $result = DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC)->select(
-            $query,
-            ['oxcoin']
-        );
-
-        $this->assertEquals('oxcoin', $result->fields['oxid']); // It exists...
-        $this->assertEquals('0', $result->fields['oxactive']); // ... and was deactivated.
     }
 
     /**
@@ -270,19 +129,7 @@ class EventsTest extends UnitTestCase
      */
     public function testAddFieldToUserTableWhenItIsNotExisting()
     {
-        $db = DatabaseProvider::getDb();
-        $databaseMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
-        $table = 'oxuser';
-        $field = 'oxac_oxcoin';
-
-        $db->execute('ALTER TABLE '.$table.' DROP COLUMN '.$field.';');
-
-        $this->assertFalse($databaseMetaDataHandler->fieldExists($field, $table));
-
-        Events::addTableFieldToUserTable();
-
-        $this->assertTrue($databaseMetaDataHandler->fieldExists($field, $table));
     }
 
     /**
@@ -293,28 +140,6 @@ class EventsTest extends UnitTestCase
      */
     public function testDoNotAddTheFieldOxAcOxcoinToTheUserTableWhenItIsAlreadyExisting()
     {
-        $db = DatabaseProvider::getDb();
-        $databaseMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
-        Events::addTableFieldToUserTable();
-
-        $this->assertTrue($databaseMetaDataHandler->fieldExists('oxac_oxcoin', 'oxuser'));
-
-        $user = oxNew(User::class);
-        $user->setId('_test_oxid');
-        $user->oxuser__oxusername = new Field('_test_user');
-        $user->oxuser__oxac_oxcoin = new Field(665.0);
-        $user->save();
-
-        $controlQuery = 'select oxac_oxcoin from oxuser where oxid = "_test_oxid"';
-
-        $amount = $db->getOne($controlQuery);
-        $this->assertEquals(665, $amount);
-
-        Events::addTableFieldToUserTable();
-
-        $user->load($user->getId());
-        $amount = $db->getOne($controlQuery);
-        $this->assertEquals(665, $amount);
     }
 }

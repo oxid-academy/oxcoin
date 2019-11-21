@@ -18,13 +18,6 @@
 
 namespace OxidAcademy\OxCoin\Core;
 
-use OxidEsales\Eshop\Application\Model\Payment;
-use OxidEsales\Eshop\Core\DatabaseProvider;
-use OxidEsales\Eshop\Core\DbMetaDataHandler;
-use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\Eshop\Core\Registry;
-
 /**
  * Class Events
  * @package OxidAcademy\OxCoin\Core
@@ -63,18 +56,7 @@ class Events
      */
     public static function addPaymentMethod()
     {
-        $payment = oxNew(Payment::class);
-        if (!$payment->load('oxcoin')) {
-            $payment->setId('oxcoin');
-            $payment->oxpayments__oxactive = new Field(1);
-            $payment->oxpayments__oxdesc = new Field('oxCoin');
-            $payment->oxpayments__oxaddsum = new Field(0.01);
-            $payment->oxpayments__oxaddsumtype = new Field('abs');
-            $payment->oxpayments__oxfromboni = new Field(0);
-            $payment->oxpayments__oxfromamount = new Field(0);
-            $payment->oxpayments__oxtoamount = new Field(10000);
-            $payment->save();
-        }
+
     }
 
     /**
@@ -82,10 +64,7 @@ class Events
      */
     public static function activatePaymentMethod()
     {
-        $payment = oxNew(Payment::class);
-        $payment->load('oxcoin');
-        $payment->oxpayments__oxactive = new Field(1);
-        $payment->save();
+
     }
 
     /**
@@ -95,23 +74,7 @@ class Events
      */
     public static function assignPaymentMethodToDefaultShippingMethod()
     {
-        $db = DatabaseProvider::getDb();
-        $oxid = $db->getOne(
-            'SELECT oxid FROM oxobject2payment WHERE oxpaymentid = ? AND oxobjectid = ?',
-            [
-                'oxcoin',
-                'oxidstandard'
-            ]
-        );
 
-        if ($oxid === false) {
-            $object2Payment = oxNew(BaseModel::class);
-            $object2Payment->init('oxobject2payment');
-            $object2Payment->oxobject2payment__oxpaymentid = new Field('oxcoin');
-            $object2Payment->oxobject2payment__oxobjectid = new Field('oxidstandard');
-            $object2Payment->oxobject2payment__oxtype = new Field('oxdelset');
-            $object2Payment->save();
-        }
     }
 
     /**
@@ -122,15 +85,7 @@ class Events
      */
     public static function addTableFieldToUserTable()
     {
-        $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
-        if (!$dbMetaDataHandler->fieldExists('oxac_oxcoin', 'oxuser')) {
-            DatabaseProvider::getDb()->execute(
-                'ALTER TABLE oxuser ADD OXAC_OXCOIN float(23,14) zerofill NOT NULL;'
-            );
-
-            self::clearTmp();
-        }
     }
 
     /**
@@ -138,10 +93,7 @@ class Events
      */
     public static function deactivatePaymentMethod()
     {
-        $payment = oxNew(Payment::class);
-        $payment->load('oxcoin');
-        $payment->oxpayments__oxactive = new Field(0);
-        $payment->save();
+
     }
 
     /**
