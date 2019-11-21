@@ -28,13 +28,13 @@ $aModule = [
         'en' => 'Module for the payment with the crypto currency OXID Coin.',
     ],
     'thumbnail'    => 'logo.png',
-    'version'      => '1.0.3',
+    'version'      => '1.0.4',
     'author'       => 'OXID Academy',
     'url'          => 'https://www.oxid-esales.com/oxid-welt/academy/schulungen/',
     'email'        => 'academy@oxid-esales.com',
     'events'       => [
-        'onActivate' => '\OxidAcademy\OxCoin\Core\Events::onActivate',
-        'onDeactivate' => '\OxidAcademy\OxCoin\Core\Events::onDeactivate'
+        'onActivate'    => '\OxidAcademy\OxCoin\Core\Events::onActivate',
+        'onDeactivate'  => '\OxidAcademy\OxCoin\Core\Events::onDeactivate'
     ],
     'extend' => [
         \OxidEsales\Eshop\Application\Model\Order::class => \OxidAcademy\OxCoin\Application\Model\Order::class

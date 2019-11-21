@@ -16,7 +16,7 @@
  * Time: 10:01
  */
 
-namespace OxidAcademy\OxCoin\Tests\Unit\Application\Model;
+namespace OxidAcademy\OxCoin\Tests\Unit\Model;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
