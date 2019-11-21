@@ -35,7 +35,7 @@ composer require oxid-academy/oxcoin
 ```
   "require": {
     ...,
-    "oxid-academy/oxcoin": "^1.0"
+    "oxid-academy/oxcoin": "dev-master"
   },
 ```
 
@@ -47,4 +47,4 @@ composer install
 ```
 
 ## Running tests
-`./vendor/bin/runtests /var/www/html/source/modules/oxac/oxcoin/Tests/`
+`./vendor/bin/runtests /var/www/oxideshop/source/modules/oxac/oxcoin/Tests/`
