@@ -28,7 +28,7 @@ This should result in the following change to `composer.json`:
 
 And then, ...
 ```
-composer require oxid-academy/oxcoin
+composer require oxid-academy/oxcoin:dev-resolved
 ```
 
 ... which makes it:
