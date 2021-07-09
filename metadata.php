@@ -21,14 +21,14 @@ $sMetadataVersion = '2.1';
  * Module information
  */
 $aModule = [
-    'id'           => 'oxac/coin',
+    'id'           => 'oxaccoin',
     'title'        => 'OXID Coin',
     'description'  => [
         'de' => 'Modul f&uuml;r die Zahlung mit der Kryptow&auml;hrung OXID Coin.',
         'en' => 'Module for the payment with the crypto currency OXID Coin.',
     ],
     'thumbnail'    => 'logo.png',
-    'version'      => '1.0.4',
+    'version'      => '2.0.0',
     'author'       => 'OXID Academy',
     'url'          => 'https://www.oxid-esales.com/oxid-welt/academy/schulungen/',
     'email'        => 'academy@oxid-esales.com',

@@ -13,13 +13,12 @@
             "target-directory": "oxac/oxcoin"
         }
     },
-    "version":  "1.0.4",
     "require": {
-        "php": ">=7.1"
+        "oxid-esales/oxideshop-metapackage-ce": ">=6.1.0"
     },
     "autoload": {
         "psr-4": {
-            "OxidAcademy\\OxCoin\\": "../../../source/modules/oxac/oxcoin"
+            "OxidAcademy\\OxCoin\\": "."
         }
     }
 }
