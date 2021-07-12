@@ -23,7 +23,7 @@ class EventsTest extends UnitTestCase
     /**
      * Will be fired every time before executing a test method.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -31,12 +31,10 @@ class EventsTest extends UnitTestCase
     /**
      * Will be fired every time after executing a test method.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
-	// Your test code coes here...
-
-
-	// Parent call
+	    // Your test code goes here...
+	    // Parent call
         parent::tearDown();
     }
 
