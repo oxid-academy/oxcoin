@@ -32,7 +32,7 @@ class EventsTest extends UnitTestCase
     /**
      * Will be fired every time before executing a test method.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -40,7 +40,7 @@ class EventsTest extends UnitTestCase
     /**
      * Will be fired every time after executing a test method.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         // Generally deleting the payment
         DatabaseProvider::getDb()->execute(
