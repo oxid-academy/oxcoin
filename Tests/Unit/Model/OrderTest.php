@@ -18,6 +18,8 @@
 
 namespace OxidAcademy\OxCoin\Tests\Unit\Model;
 
+use OxidEsales\TestingLibrary\UnitTestCase;
+
 class OrderTest extends UnitTestCase
 {
     /**

@@ -13,7 +13,6 @@
             "target-directory": "oxac/oxcoin"
         }
     },
-    "version":  "1.0.3",
     "require": {
         "php": ">=7.1"
     },

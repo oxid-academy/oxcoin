@@ -18,6 +18,8 @@
 
 namespace OxidAcademy\OxCoin\Tests\Unit\Core;
 
+use OxidEsales\TestingLibrary\UnitTestCase;
+
 class EventsTest extends UnitTestCase
 {
     /**
