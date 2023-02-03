@@ -15,7 +15,7 @@ composer config repositories.oxid-academy/oxcoin vcs https://github.com/oxid-aca
 
 This should result in the following change to `composer.json`:
 ```
-  ...
+   ...
   "repositories": {
     "oxid-academy/oxcoin": {
       "type": "vcs",
@@ -28,14 +28,14 @@ This should result in the following change to `composer.json`:
 
 And then, ...
 ```
-composer require oxid-academy/oxcoin:dev-resolved
+composer require oxid-academy/oxcoin:dev-b-6.5.x_resolved
 ```
 
-... which results in something like:
+... which results in (in case you run with OXID eShop 6.5.x):
 ```
   "require": {
     ...,
-    "oxid-academy/oxcoin": "dev-resolved"
+    "oxid-academy/oxcoin": "dev-b-6.5.x_resolved"
   },
 ```
 
@@ -48,8 +48,13 @@ vendor/bin/oe-console o:m:activate oxacoxcoin
 
 # Running tests
 cd into the root dir of your compilation and run the following command whereupon `/var/www/oxideshop` represents the absolute
-path to your compilation
+path to your compilation:
 
 ```
 cd /var/www/oxideshop/
-`./vendor/bin/runtests /var/www/oxideshop/source/modules/oxac/oxcoin/Tests/`
+
+bin/oe-console oe:module:activate oxac_oxcoin
+
+`./vendor/bin/phpunit -c /var/www/vendor/oxid-academy/oxcoin/tests/phpunit.xml --testsuite=UnitTests `
+
+`./vendor/bin/phpunit --bootstrap=/var/www/source/bootstrap.php -c /var/www/vendor/oxid-academy/oxcoin/tests/phpunit.xml --testsuite=IntegrationTests `

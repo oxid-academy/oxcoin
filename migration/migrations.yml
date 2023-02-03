@@ -1,0 +1,4 @@
+name: Migrations for oxac_oxcoin
+migrations_namespace: OxidAcademy\OxCoin\Migrations
+table_name: oxmigrations_oxac_oxcoin
+migrations_directory: data
