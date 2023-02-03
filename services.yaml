@@ -1,0 +1,11 @@
+services:
+
+  _defaults:
+    public: false
+    autowire: true
+
+  OxidAcademy\OxCoin\Service\Coin:
+    class: OxidAcademy\OxCoin\Service\Coin
+    arguments:
+      $rate: "@=container.hasParameter('module.oxcoin.custom_rate') ? parameter('module.oxcoin.custom_rate') : 1000.0"
+    public: true

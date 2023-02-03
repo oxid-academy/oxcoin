@@ -1,15 +1,8 @@
 <?php
+
 /**
- * This Software is the property of OXID eSales and is protected
- * by copyright law - it is NOT Freeware.
- *
- * Any unauthorized use of this software without a valid license key
- * is a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * @author        OXID Academy
- * @link          https://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2019
+ * Copyright © OXID eSales AG. All rights reserved.
+ * See LICENSE file for license details.
  */
 
 /**
@@ -21,14 +14,14 @@ $sMetadataVersion = '2.1';
  * Module information
  */
 $aModule = [
-    'id'           => 'oxacoxcoin',
+    'id'           => 'oxac_oxcoin',
     'title'        => 'OXID Coin',
     'description'  => [
         'de' => 'Modul f&uuml;r die Zahlung mit der Kryptow&auml;hrung OXID Coin.',
         'en' => 'Module for the payment with the crypto currency OXID Coin.',
     ],
     'thumbnail'    => 'logo.png',
-    'version'      => '2.0.1',
+    'version'      => '3.0.0',
     'author'       => 'OXID Academy',
     'url'          => 'https://www.oxid-esales.com/academy/schulungen',
     'email'        => 'academy@oxid-esales.com',
@@ -37,6 +30,7 @@ $aModule = [
         'onDeactivate'  => '\OxidAcademy\OxCoin\Core\Events::onDeactivate'
     ],
     'extend' => [
+        \OxidEsales\Eshop\Application\Model\User::class => \OxidAcademy\OxCoin\Model\User::class,
         \OxidEsales\Eshop\Application\Model\Order::class => \OxidAcademy\OxCoin\Model\Order::class
     ],
 ];

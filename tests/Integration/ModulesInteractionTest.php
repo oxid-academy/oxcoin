@@ -1,23 +1,13 @@
 <?php
+
 /**
- * This Software is the property of OXID eSales and is protected
- * by copyright law - it is NOT Freeware.
- *
- * Any unauthorized use of this software without a valid license key
- * is a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * @author        OXID Academy
- * @link          https://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2019
- *
- * User: michael
- * Date: 06.05.19
- * Time: 08:34
+ * Copyright © OXID eSales AG. All rights reserved.
+ * See LICENSE file for license details.
  */
 
 namespace OxidAcademy\OxCoin\Tests\Integration;
 
+use OxidAcademy\OxCoin\Core\Events;
 use OxidEsales\Eshop\Application\Controller\PaymentController;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
@@ -27,10 +17,21 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\TestingLibrary\UnitTestCase;
+use OxidEsales\TestingLibrary\UnitTestCase as TestCase;
 
-class ModulesInteractionTest extends UnitTestCase
+
+class ModulesInteractionTest extends TestCase
 {
+    /**
+     * Will be fired every time before executing a test method.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Events::onActivate();
+    }
+
     public function testPaymentListProvidedByThePaymentController()
     {
         $_POST['sShipSet'] = 'oxidstandard';
