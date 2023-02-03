@@ -1,19 +1,8 @@
 <?php
+
 /**
- * This Software is the property of OXID eSales and is protected
- * by copyright law - it is NOT Freeware.
- *
- * Any unauthorized use of this software without a valid license key
- * is a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * @author        OXID Academy
- * @link          https://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2021
- *
- * User: michael
- * Date: 22.05.19
- * Time: 08:19
+ * Copyright © OXID eSales AG. All rights reserved.
+ * See LICENSE file for license details.
  */
 
 namespace OxidAcademy\OxCoin\Model;
@@ -39,8 +28,12 @@ class Order extends Order_parent
 
         if (!$user->isMallAdmin()) {
             $earnedCoins = $basket->getNettoSum() / 1000.0;
-            $coinsSum = (float) $user->oxuser__oxac_oxcoin->value + $earnedCoins;
-            $user->oxuser__oxac_oxcoin = new Field($coinsSum, Field::T_RAW);
+            $coinsSum = (float) $user->getFieldData('oxacoxcoin') + $earnedCoins;
+            $user->assign(
+                [
+                   'oxacoxcoin' => $coinsSum
+                ]
+            );
             $user->save();
         }
 

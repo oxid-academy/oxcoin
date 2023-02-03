@@ -1,0 +1,4 @@
+table_storage:
+  table_name: oxmigrations_oxac_oxcoin
+migrations_paths:
+  'OxidAcademy\OxCoin\Migrations': data
