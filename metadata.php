@@ -30,6 +30,7 @@ $aModule = [
         'onDeactivate'  => '\OxidAcademy\OxCoin\Core\Events::onDeactivate'
     ],
     'extend' => [
+        \OxidEsales\Eshop\Application\Model\User::class => \OxidAcademy\OxCoin\Model\User::class,
         \OxidEsales\Eshop\Application\Model\Order::class => \OxidAcademy\OxCoin\Model\Order::class
     ],
 ];

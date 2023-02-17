@@ -8,33 +8,33 @@
 namespace OxidAcademy\OxCoin\Model;
 
 use OxidEsales\Eshop\Application\Model\Basket;
-use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Application\Model\Order as EshopModelOrder;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidAcademy\OxCoin\Service\Coin as CoinService;
 
 /**
- * Class Order
- * @package OxidAcademy\OxCoin\Application\Model
+ * Order model extension
+ *
+ * @mixin Order
+ * @eshopExtension
  */
 class Order extends Order_parent
 {
     /**
      * @param Basket $basket
-     * @param $user
-     * @param bool $recalculatingOrder
+     * @param User   $user
+     * @param bool   $recalculatingOrder
      * @return int
      */
     public function finalizeOrder(Basket $basket, $user, $recalculatingOrder = false)
     {
         $orderState = parent::finalizeOrder($basket, $user, $recalculatingOrder);
 
-        if (!$user->isMallAdmin()) {
-            $earnedCoins = $basket->getNettoSum() / 1000.0;
-            $coinsSum = (float) $user->getFieldData('oxacoxcoin') + $earnedCoins;
-            $user->assign(
-                [
-                   'oxacoxcoin' => $coinsSum
-                ]
-            );
-            $user->save();
+        if (!$recalculatingOrder) {
+            ContainerFactory::getInstance()
+                ->getContainer()
+                ->get(CoinService::class)
+                ->trackCoins($basket, $user);
         }
 
         return $orderState;
