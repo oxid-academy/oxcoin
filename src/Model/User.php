@@ -8,12 +8,13 @@
 namespace OxidAcademy\OxCoin\Model;
 
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\User as EshopModelUser;
 use OxidEsales\Eshop\Core\Field;
 
 /**
  * User model extension
  *
- * @mixin Order
+ * @mixin EshopModelUser
  * @eshopExtension
  */
 class User extends User_parent
@@ -24,13 +25,24 @@ class User extends User_parent
             return false;
         }
 
-        $coinsSum = (float) $this->getFieldData('oxacoxcoin') + $earnedCoins;
+        $coinsSum = $this->getOxAcCoins() + $earnedCoins;
+
+        return $this->saveOxAcCoins($coinsSum);
+    }
+
+    public function getOxAcCoins(): float
+    {
+        return (float) $this->getFieldData('oxacoxcoin');
+    }
+
+    protected function saveOxAcCoins(float $coins): bool
+    {
         $this->assign(
             [
-                'oxacoxcoin' => $coinsSum
+                'oxacoxcoin' => $coins
             ]
         );
 
-        return $this->save();
+        return (bool) $this->save();
     }
 }
