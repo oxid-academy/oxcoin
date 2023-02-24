@@ -5,82 +5,43 @@
  * See LICENSE file for license details.
  */
 
-namespace OxidAcademy\OxCoin\Tests\Unit\Model;
+namespace OxidAcademy\OxCoin\Tests\Integration\Model;
 
 use OxidAcademy\OxCoin\Core\Events;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Field;
-use PHPUnit\Framework\TestCase;
+use OxidEsales\EshopCommunity\Tests\Integration\IntegrationTestCase;
 
-class OrderTest extends TestCase
+class OrderTest extends BaseTest
 {
-    private const USER_ID = '_test_user';
-
-    /**
-     * Will be fired every time before executing a test method.
-     */
-    protected function setUp(): void
+    public function testFinalizeOrderEarnCoin()
     {
-        parent::setUp();
+        $user = $this->loadExampleUser();
 
-        Events::onActivate();
-
-        $user = oxNew(User::class);
-        $user->setId(self::USER_ID);
-        $user->assign(
-            [
-                'username' => 'testuser@oxid-academy.com',
-                'oxrights' => 'user'
-            ]
-        );
-        $user->save();
-    }
-
-    /**
-     * @group finalizeOrder
-     */
-    public function testFinalizeOrderEarnCoinWhenUserIsCustomer()
-    {
-        $user = oxNew(User::class);
-        $user->load(self::USER_ID);
+        $this->assertEqualsWithDelta(0, $user->getOxAcCoins(), 0.001);
 
         $basket = oxNew(Basket::class);
-        $basket->setNettoSum(1000.0);
-
-        $this->assertEquals(0, $user->getFieldData('oxacoxcoin'));
+        $basket->setNettoSum(1200.0);
 
         $order = oxNew(Order::class);
         $order->finalizeOrder($basket, $user);
 
-        $this->assertEquals(1, $user->getFieldData('oxacoxcoin'));
+        $this->assertEqualsWithDelta(1.2, $user->getOxAcCoins(), 0.001);
     }
 
-    /**
-     * @group finalizeOrder
-     */
-    public function testFinalizeOrderDoNotEarnCoinWhenUserIsMallAdmin()
+    public function testFinalizeOrderWithoutBasketUser()
     {
-        $user = $this
-            ->getMockBuilder(User::class)
-            ->onlyMethods(['isMallAdmin'])
-            ->getMock();
-
-        $user->expects($this->any())
-            ->method('isMallAdmin')
-            ->will($this->returnValue(true));
-
-        $user->load(self::USER_ID);
+        //this user is not existingin database (not loaded, no oxid)
+        $user = oxNew(User::class);
+        $this->assertEqualsWithDelta(0, $user->getOxAcCoins(), 0.001);
 
         $basket = oxNew(Basket::class);
-        $basket->setNettoSum(1000.0);
-
-        $this->assertEquals(0, $user->getFieldData('oxacoxcoin'));
+        $basket->setNettoSum(600.0);
 
         $order = oxNew(Order::class);
         $order->finalizeOrder($basket, $user);
 
-        $this->assertEquals(0, $user->getFieldData('oxacoxcoin'));
+        $this->assertEqualsWithDelta(0, $user->getOxAcCoins(), 0.001);
     }
 }

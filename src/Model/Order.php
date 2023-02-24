@@ -15,7 +15,7 @@ use OxidAcademy\OxCoin\Service\Coin as CoinService;
 /**
  * Order model extension
  *
- * @mixin Order
+ * @mixin EshopModelOrder
  * @eshopExtension
  */
 class Order extends Order_parent

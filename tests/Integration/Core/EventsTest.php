@@ -5,7 +5,7 @@
  * See LICENSE file for license details.
  */
 
-namespace OxidAcademy\OxCoin\Tests\Unit\Core;
+namespace OxidAcademy\OxCoin\Tests\Integration\Core;
 
 use OxidAcademy\OxCoin\Core\Events;
 use OxidEsales\Eshop\Application\Model\Payment;
