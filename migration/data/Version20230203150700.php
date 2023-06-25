@@ -27,7 +27,7 @@ final class Version20230203150700 extends AbstractMigration
         //extend the oxuser table
         $customerTable = $schema->getTable('oxuser');
         if (!$customerTable->hasColumn('OXACOXCOIN')) {
-            $this->addSql("ALTER TABLE `oxuser` ADD COLUMN `OXACOXCOIN`
+            $this->addSql("ALTER TABLE `oxuser` ADD `OXACOXCOIN`
                  float(23,14) zerofill NOT NULL DEFAULT '0' COMMENT 'oxcoin special field';
             ");
         }
