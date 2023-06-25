@@ -27,7 +27,7 @@ final class Coin
             return $result;
         }
 
-        $earnedCoins = $basket->getNettoSum() /$this->rate;
+        $earnedCoins = $basket->getNettoSum() / $this->rate;
 
         return $user->trackOxAcCoins($earnedCoins);
     }
